@@ -11,6 +11,17 @@
       "credit_total": "INT"
     }
   },
+  "item.item-info": {
+    "transaction": true,
+    "partition-key": [
+      "id"
+    ],
+    "columns": {
+      "id": "TEXT",
+      "name": "TEXT",
+      "price": "DOUBLE"
+    }
+  },
   "order.orders": {
     "transaction": true,
     "partition-key": [
