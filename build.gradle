@@ -13,10 +13,12 @@ repositories {
 dependencies {
     implementation 'com.scalar-labs:scalardb:3.9.1'
     implementation 'info.picocli:picocli:4.7.1'
+    implementation 'org.springframework.boot:spring-boot-starter:2.6.3'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.3'
 }
 
 application {
-    mainClassName = 'sample.command.SampleCommand'
+    mainClassName = 'com.ec.ECSite'
 }
 
 archivesBaseName = "sample"
