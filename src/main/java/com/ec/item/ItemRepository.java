@@ -22,7 +22,7 @@ public class ItemRepository {
         DistributedTransaction transaction = null;
         try {
             transaction = this.manager.start();
-            List<Result> items = transaction.scan(
+            List<Result> res = transaction.scan(
                     Scan.newBuilder()
                     .namespace("item")
                     .table("item-info")
@@ -30,15 +30,15 @@ public class ItemRepository {
                             .projections("id", "name", "price")
                             .build()
             );
-            List<Item> products = new ArrayList<>();
-            for(Result item : items) {
+            List<Item> items = new ArrayList<>();
+            for(Result item : res) {
                 String id = item.getText("id");
                 String name = item.getText("name");
                 Double price = item.getDouble("price");
-                products.add(new Item(id, name, price));
+                items.add(new Item(id, name,  price));
             }
             transaction.commit();
-            return products;
+            return items;
         } catch(Exception e) {
             if(transaction != null) {
                 transaction.abort();
@@ -51,6 +51,8 @@ public class ItemRepository {
         DistributedTransaction transaction = null;
         String name = item.getName();
         Double price = item.getPrice();
+        System.out.println("name: " + name);
+        System.out.println("price: " + price);
         try {
             transaction = this.manager.start();
             transaction.put(
@@ -58,8 +60,9 @@ public class ItemRepository {
                     .namespace("item")
                     .table("item-info")
                     .partitionKey(Key.ofText("id", UUID.randomUUID().toString()))
-                    .textValue("name", name)
-                    .doubleValue("price", price).build()
+                            .textValue("name", name)
+                            .doubleValue("price", price)
+                            .build()
             );
             transaction.commit();
             return true;

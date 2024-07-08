@@ -1,5 +1,7 @@
 package com.ec.item;
 
+import org.springframework.jmx.export.naming.IdentityNamingStrategy;
+
 public class Item {
     private String id;
     private String name;

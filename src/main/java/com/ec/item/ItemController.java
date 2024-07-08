@@ -19,7 +19,7 @@ public class ItemController {
     public List<Item> getAllItems() throws AbortException {
         return service.getAllItems();
     }
-    @PutMapping("/add")
+    @PostMapping  ("/add")
     public boolean addItem(@RequestBody Item item) throws AbortException {
         return service.addItem(item);
     }
