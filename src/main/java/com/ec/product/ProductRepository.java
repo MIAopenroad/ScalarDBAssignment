@@ -51,8 +51,6 @@ public class ProductRepository {
         DistributedTransaction transaction = null;
         String name = product.getName();
         Double price = product.getPrice();
-        System.out.println("Name: " + name);
-        System.out.println("Price: " + price);
         try {
             transaction = this.manager.start();
             transaction.put(
