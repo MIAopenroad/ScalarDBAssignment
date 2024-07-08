@@ -1,11 +1,11 @@
-package com.ec.product;
+package com.ec.item;
 
-public class Product {
+public class Item {
     private String id;
     private String name;
     private Double price;
-    public Product() {}
-    public Product(String id, String name, Double price) {
+    public Item() {}
+    public Item(String id, String name, Double price) {
         this.id = id;
         this.name = name;
         this.price = price;

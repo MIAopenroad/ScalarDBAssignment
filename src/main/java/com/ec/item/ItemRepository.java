@@ -1,4 +1,4 @@
-package com.ec.product;
+package com.ec.item;
 
 import com.scalar.db.api.*;
 import com.scalar.db.exception.transaction.AbortException;
@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class ProductRepository {
+public class ItemRepository {
     private final DistributedTransactionManager manager;
-    public ProductRepository() throws IOException {
+    public ItemRepository() throws IOException {
         TransactionFactory factory = TransactionFactory.create("database.properties");
         this.manager = factory.getTransactionManager();
     }
-    public List<Product> getAllProducts() throws AbortException {
+    public List<Item> getAllItems() throws AbortException {
         DistributedTransaction transaction = null;
         try {
             transaction = this.manager.start();
@@ -30,12 +30,12 @@ public class ProductRepository {
                             .projections("id", "name", "price")
                             .build()
             );
-            List<Product> products = new ArrayList<>();
+            List<Item> products = new ArrayList<>();
             for(Result item : items) {
                 String id = item.getText("id");
                 String name = item.getText("name");
                 Double price = item.getDouble("price");
-                products.add(new Product(id, name, price));
+                products.add(new Item(id, name, price));
             }
             transaction.commit();
             return products;
@@ -47,10 +47,10 @@ public class ProductRepository {
         }
     }
 
-    public boolean addProduct(Product product) throws AbortException {
+    public boolean addItem(Item item) throws AbortException {
         DistributedTransaction transaction = null;
-        String name = product.getName();
-        Double price = product.getPrice();
+        String name = item.getName();
+        Double price = item.getPrice();
         try {
             transaction = this.manager.start();
             transaction.put(
