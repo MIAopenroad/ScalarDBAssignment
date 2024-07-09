@@ -25,8 +25,8 @@ public class CustomerRepository {
         try {
             transaction = this.manager.start();
             Optional<Result> user = transaction.get(Get.newBuilder()
-                    .namespace("user")
-                    .table("users")
+                    .namespace("customer")
+                    .table("customers")
                     .partitionKey(Key.ofText("email", email)).build()
             );
 
@@ -64,7 +64,7 @@ public class CustomerRepository {
             Optional<Result> customer = transaction.get(Get.newBuilder()
                     .namespace("customer")
                     .table("customers")
-                    .partitionKey(Key.ofText("id", UUID.randomUUID().toString()))
+                    .partitionKey(Key.ofText("email", email))
                     .build()
             );
             //もうすでに会員登録済み
@@ -78,8 +78,8 @@ public class CustomerRepository {
                     Put.newBuilder()
                     .namespace("customer")
                     .table("customers")
-                    .partitionKey(Key.ofText("id", UUID.randomUUID().toString()))
-                            .textValue("email", email)
+                    .partitionKey(Key.ofText("email", email))
+                            .textValue("id", UUID.randomUUID().toString())
                             .textValue("password", hashedPassword).build()
             );
             transaction.commit();

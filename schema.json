@@ -2,7 +2,7 @@
   "customer.customers": {
     "transaction": true,
     "partition-key": [
-      "id"
+      "email"
     ],
     "columns": {
       "id": "TEXT",
