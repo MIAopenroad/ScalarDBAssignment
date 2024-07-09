@@ -121,7 +121,9 @@ public class CustomerRepository {
             return customers;
         } catch (Exception e) {
             e.printStackTrace();
-            transaction.abort();
+            if(transaction != null) {
+                transaction.abort();
+            }
             return new ArrayList<>();
         }
     }
