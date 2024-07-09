@@ -2,55 +2,23 @@
   "customer.customers": {
     "transaction": true,
     "partition-key": [
-      "customer_id"
+      "email"
     ],
     "columns": {
-      "customer_id": "INT",
+      "id": "TEXT",
+      "email": "TEXT",
+      "password": "TEXT"
+    }
+  },
+  "item.item-info": {
+    "transaction": true,
+    "partition-key": [
+      "id"
+    ],
+    "columns": {
+      "id": "TEXT",
       "name": "TEXT",
-      "credit_limit": "INT",
-      "credit_total": "INT"
-    }
-  },
-  "order.orders": {
-    "transaction": true,
-    "partition-key": [
-      "customer_id"
-    ],
-    "clustering-key": [
-      "timestamp"
-    ],
-    "secondary-index": [
-      "order_id"
-    ],
-    "columns": {
-      "order_id": "TEXT",
-      "customer_id": "INT",
-      "timestamp": "BIGINT"
-    }
-  },
-  "order.statements": {
-    "transaction": true,
-    "partition-key": [
-      "order_id"
-    ],
-    "clustering-key": [
-      "item_id"
-    ],
-    "columns": {
-      "order_id": "TEXT",
-      "item_id": "INT",
-      "count": "INT"
-    }
-  },
-  "order.items": {
-    "transaction": true,
-    "partition-key": [
-      "item_id"
-    ],
-    "columns": {
-      "item_id": "INT",
-      "name": "TEXT",
-      "price": "INT"
+      "price": "DOUBLE"
     }
   }
 }
