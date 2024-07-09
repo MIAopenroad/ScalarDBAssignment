@@ -20,5 +20,31 @@
       "name": "TEXT",
       "price": "DOUBLE"
     }
+  },
+
+  "order.orders": {
+    "transaction": true,
+    "partition-key": [
+      "order_id"
+    ],
+    "columns": {
+      "order_id": "TEXT",
+      "customer_id": "TEXT",
+      "timestamp": "TEXT",
+      "status": "BOOLEAN"
+    }
+  },
+  "order.statements": {
+    "transaction": "true",
+    "partition-key": [
+      "statement_id"
+    ],
+    "columns": {
+      "statement_id": "TEXT",
+      "customer_id": "TEXT",
+      "order_id": "TEXT",
+      "item_name": "TEXT" ,
+      "count": "INT"
+    }
   }
 }
