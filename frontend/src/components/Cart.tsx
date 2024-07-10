@@ -27,7 +27,6 @@ const Cart: React.FC = () => {
     const registerOrder = async () => {
       const statements: { [key: string]: number } = {};
       cart.map((item: CartItem) => (statements[item.itemId] = item.quantity));
-      console.log(statements);
       const { data } = await axios.post<boolean>("/orders/order", {
         email: userName,
         statements: statements,

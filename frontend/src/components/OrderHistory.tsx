@@ -18,7 +18,9 @@ import { useAuth } from "../contexts/AuthContext";
 
 const OrderHistory: React.FC = () => {
   const { userName } = useAuth();
-  const [orderHistory, setOrderHistory] = useState<OrderWithExtendedStatements[]>([]);
+  const [orderHistory, setOrderHistory] = useState<
+    OrderWithExtendedStatements[]
+  >([]);
   // const orderHistory = sample_orderHistory;
 
   useEffect(() => {
@@ -26,7 +28,6 @@ const OrderHistory: React.FC = () => {
       const { data } = await axios.get<OrderWithExtendedStatements[]>(
         `/orders/record/${userName}`
       );
-      console.log("orderHistoryByEmail>>", data);
       setOrderHistory(data);
     };
     fetchOrderHistoryByEmail();
@@ -54,9 +55,7 @@ const OrderHistory: React.FC = () => {
                 <Text fontSize="lg" fontWeight="bold">
                   Order #{order.orderId}
                 </Text>
-                <Badge
-                  colorScheme={order.status ? "green" : "red"}
-                >
+                <Badge colorScheme={order.status ? "green" : "red"}>
                   {order.status ? "Success" : "Failure"}
                 </Badge>
               </HStack>

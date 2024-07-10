@@ -22,10 +22,8 @@ const ProductList: React.FC = () => {
       .get<Item[]>(`/items/all`)
       .then((response) => {
         setItems(response.data);
-        console.log(items);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((_) => {
         alert("Failed to fetch data from database.");
       });
   }, []);
