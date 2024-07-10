@@ -22,7 +22,7 @@ import { sample_products, currencyMarks } from '../consts';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const product = sample_products.find(p => p.id === parseInt(id));  // TODO APIでDBからFind
+  const product = sample_products.find(p => p.id === parseInt(id ?? ''));  // TODO APIでDBからFind
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
