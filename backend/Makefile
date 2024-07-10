@@ -22,7 +22,7 @@ down_with_volume:
 
 .PHONY: run_container
 run_container:
-	docker-compose up -d
+	docker-compose up -d mysql cassandra
 
 .PHONY: build
 build:

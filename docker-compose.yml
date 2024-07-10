@@ -30,15 +30,15 @@ services:
     container_name: "cassandra"
     ports:
       - "9042:9042"
+    volumes:
+      - cassandra-data:/var/lib/cassandra
 
 volumes:
   node_modules:
     driver: local
     driver_opts:
       type: none
-      device: ${PWD}/frontend/node_modules
+      device: ${PROJECT_DIR}/frontend/node_modules
       o: bind
-    volumes:
-      - cassandra-data:/var/lib/cassandra
   cassandra-data:
   mysql-data:
