@@ -37,10 +37,9 @@ const Cart: React.FC = () => {
     registerOrder();
   };
 
-  const totalPrice = cart.reduce(
-    (total, product) => total + product.price * product.quantity,
-    0
-  );
+  const totalPrice = Math.round(cart.reduce(
+    (total, product) => total + product.price * product.quantity, 0
+  ) * 100) / 100;  // IEEE 754標準に基づく浮動小数点数の対策
 
   return (
     <Box p={5}>
@@ -95,8 +94,7 @@ const Cart: React.FC = () => {
           <Divider />
           <Box p={5} textAlign="right">
             <Text fontSize="lg" fontWeight="bold">
-              Total: {currencyMarks}
-              {totalPrice}
+              Total: {currencyMarks} {totalPrice}
             </Text>
             <Button colorScheme="teal" mt={3} onClick={handleOrder}>
               Order

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
   Button,
@@ -20,7 +20,6 @@ import { currencyMarks } from "../consts";
 import { Item } from "../types";
 
 const ProductDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const location = useLocation();
