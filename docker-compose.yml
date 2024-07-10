@@ -4,14 +4,14 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: mysql
-    container_name: "mysql-1"
+    container_name: "mysql"
     ports:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
   cassandra:
     image: cassandra:3.11
-    container_name: "cassandra-1"
+    container_name: "cassandra"
     ports:
       - "9042:9042"
     volumes:

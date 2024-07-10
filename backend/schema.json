@@ -10,7 +10,7 @@
       "password": "TEXT"
     }
   },
-  "item.item-info": {
+  "item.item_info":  {
     "transaction": true,
     "partition-key": [
       "item_id"
