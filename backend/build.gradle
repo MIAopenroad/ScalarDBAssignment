@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'org.sample'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.scalar-labs:scalardb:3.13.0'
+    implementation 'info.picocli:picocli:4.7.1'
+    implementation 'org.springframework.boot:spring-boot-starter:2.6.3'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.3'
+}
+
+application {
+    mainClassName = 'com.ec.ECSite'
+}
+
+task load(type: Exec) {
+    commandLine 'java', '-jar', 'scalardb-schema-loader-3.12.3.jar', '--config', 'database.properties', '--schema-file', 'schema.json', '--coordinator'
+}
+
+archivesBaseName = "ecsite"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
