@@ -14,9 +14,7 @@ public class RegisterOrderRequestModel {
         this.email = email;
     }
 
-    public Map<String, Integer> getStatements() {
-        return statements;
-    }
+    public Map<String, Integer> getStatements() { return statements; }
 
     public void setStatements(Map<String, Integer> statements) {
         this.statements = statements;

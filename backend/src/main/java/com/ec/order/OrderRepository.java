@@ -52,17 +52,20 @@ public class OrderRepository {
                                 .table("statements")
                                 .all()
                                 .where(ConditionBuilder.column("order_id").isEqualToText(order.getOrderId()))
-                                .projections("statement_id", "order_id", "customer_id", "item_name", "count")
+                                .projections("statement_id", "order_id", "item_id", "count")
                                 .build()
                 );
-                Map<String, Integer> statements = new HashMap<>();
+                List<Statements> statements = new ArrayList<>();
                 for(Result row : rows) {
-                    String item_name = row.getText("item_name");
+                    String statementId = row.getText("statement_id");
+                    String orderId = row.getText("order_id");
+                    String itemId = row.getText("item_id");
                     int count = row.getInt("count");
-                    System.out.println("item_name: " + item_name);
+                    System.out.println("itemId: " + itemId);
                     System.out.println("count: " + count);
                     System.out.println();
-                    statements.put(item_name, count);
+                    Statements statement = new Statements(statementId, orderId, itemId, count);
+                    statements.add(statement);
                 }
                 orderWithStatementsList.add(
                         new OrderWithStatements(order.getOrderId(), order.getCustomerId(),
@@ -93,14 +96,14 @@ public class OrderRepository {
                             .namespace("customer")
                             .table("customers")
                             .partitionKey(Key.ofText("email", email))
-                            .projections("id", "email", "password")
+                            .projections("customer_id", "email", "password")
                             .build()
             );
             if(!res.isPresent()) {
                 transaction.abort();
                 return new ArrayList<>();
             }
-            String customerId = res.get().getText("id");
+            String customerId = res.get().getText("customer_id");
             //2. where customer_id == customerId
             List<Result> ordersByCustomer = transaction.scan(
                     Scan.newBuilder()
@@ -123,14 +126,16 @@ public class OrderRepository {
                                 .table("statements")
                                 .all()
                                 .where(ConditionBuilder.column("order_id").isEqualToText(orderId))
-                                .projections("statement_id", "order_id", "customer_id", "item_name", "count")
+                                .projections("statement_id", "order_id", "item_id", "count")
                                 .build()
                 );
-                Map<String, Integer> statements = new HashMap<>();
-                for(Result statement: statementsByOrderId) {
-                    String itemName = statement.getText("item_name");
-                    int count = statement.getInt("count");
-                    statements.put(itemName, count);
+                List<Statements> statements = new ArrayList<>();
+                for(Result row: statementsByOrderId) {
+                    Statements statement = new Statements(
+                            row.getText("statement_id"), row.getText("order_id"),
+                            row.getText("item_id"), row.getInt("count")
+                    );
+                    statements.add(statement);
                 }
                 resp.add(new OrderWithStatements(orderId, customerId, timestamp, status, statements));
             }
@@ -155,14 +160,14 @@ public class OrderRepository {
                             .namespace("customer")
                             .table("customers")
                             .partitionKey(Key.ofText("email", email))
-                            .projections("id", "email", "password")
+                            .projections("customer_id", "email", "password")
                             .build()
             );
             if(!res.isPresent()) {
                 transaction.abort();
                 return false;
             }
-            String customerId = res.get().getText("id");
+            String customerId = res.get().getText("customer_id");
             String orderId = UUID.randomUUID().toString();
             transaction.insert(
                     Insert.newBuilder()
@@ -174,16 +179,15 @@ public class OrderRepository {
                             .booleanValue("status", true)
                             .build()
             );
-            for(String itemName: statements.keySet()) {
+            for(String itemId: statements.keySet()) {
                 transaction.insert(
                         Insert.newBuilder()
                                 .namespace("order")
                                 .table("statements")
                                 .partitionKey(Key.ofText("statement_id", UUID.randomUUID().toString()))
                                 .textValue("order_id", orderId)
-                                .textValue("customer_id", customerId)
-                                .textValue("item_name", itemName)
-                                .intValue("count", statements.get(itemName))
+                                .textValue("item_id", itemId)
+                                .intValue("count", statements.get(itemId))
                                 .build()
                 );
             }

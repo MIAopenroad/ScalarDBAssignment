@@ -1,21 +1,20 @@
 package com.ec.order;
 
-import java.util.Map;
+import java.util.List;
 
 public class OrderWithStatements extends Order {
-    private Map<String, Integer> statements;
+    private List<Statements> statements;
 
-    public OrderWithStatements(String orderId, String customerId, String timestamp, boolean status,
-                               Map<String, Integer> statements) {
+    public OrderWithStatements(String orderId, String customerId, String timestamp, boolean status, List<Statements> statements) {
         super(orderId, customerId, timestamp, status);
         this.statements = statements;
     }
 
-    public Map<String, Integer> getStatements() {
+    public List<Statements> getStatements() {
         return statements;
     }
 
-    public void setStatements(Map<String, Integer> statements) {
+    public void setStatements(List<Statements> statements) {
         this.statements = statements;
     }
 }

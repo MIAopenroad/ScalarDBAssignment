@@ -3,22 +3,22 @@ package com.ec.item;
 import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
 public class Item {
-    private String id;
+    private String itemId;
     private String name;
     private Double price;
     public Item() {}
-    public Item(String id, String name, Double price) {
-        this.id = id;
+    public Item(String itemId, String name, Double price) {
+        this.itemId = itemId;
         this.name = name;
         this.price = price;
     }
 
-    public String getId() {
-        return id;
+    public String getItemId() {
+        return itemId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     public String getName() {
