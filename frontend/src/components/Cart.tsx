@@ -23,7 +23,6 @@ const Cart: React.FC = () => {
   const { userName } = useAuth();
 
   const handleOrder = () => {
-    let isSuccess = true;
     const registerOrder = async () => {
       const statements: { [key: string]: number } = {};
       cart.map((item: CartItem) => (statements[item.itemId] = item.quantity));
@@ -31,11 +30,11 @@ const Cart: React.FC = () => {
         email: userName,
         statements: statements,
       });
-      isSuccess = data;
+      clearCart();
+      let isSuccess = data;
+      navigate(isSuccess ? "/order-success" : "/order-failure");
     };
     registerOrder();
-    clearCart();
-    navigate(isSuccess ? "/order-success" : "/order-failure");
   };
 
   const totalPrice = cart.reduce(

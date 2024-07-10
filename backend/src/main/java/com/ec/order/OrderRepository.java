@@ -202,6 +202,7 @@ public class OrderRepository {
             if(status) {
                 for(Result item: items) {
                     String itemId = item.getText("item_id");
+                    System.out.println("new stock: " + (item.getInt("stock") - statements.get(itemId)));
                     transaction.update(
                             Update.newBuilder()
                                     .namespace("item")
@@ -237,7 +238,7 @@ public class OrderRepository {
                 );
             }
             transaction.commit();
-            return true;
+            return status;
         } catch (Exception e) {
             e.printStackTrace();
             if(transaction != null) {
