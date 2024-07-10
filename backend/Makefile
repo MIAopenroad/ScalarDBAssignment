@@ -46,7 +46,7 @@ wait_cassandra:
 	@echo "Cassandra container get ready!!"
 
 .PHONY: seed
-seed: seed_customer seed_item
+seed: seed_item
 
 .PHONY: seed_customer
 seed_customer:

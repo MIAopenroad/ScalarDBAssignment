@@ -6,18 +6,21 @@ import com.scalar.db.io.Key;
 import com.scalar.db.service.TransactionFactory;
 import org.springframework.stereotype.Repository;
 
+import javax.crypto.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 @Repository
 public class CustomerRepository {
     private final DistributedTransactionManager manager;
-    public CustomerRepository() throws IOException {
+    private final int keySize = 256;
+    private SecretKey secretKey;
+    public CustomerRepository() throws IOException, NoSuchAlgorithmException {
         TransactionFactory factory = TransactionFactory.create("database.properties");
         this.manager = factory.getTransactionManager();
+        this.secretKey = this.generateAESKey();
     }
 
     public boolean signin(final String email, final String password) throws AbortException {
@@ -51,10 +54,6 @@ public class CustomerRepository {
             e.printStackTrace();
             return false;
         }
-    }
-    private boolean validatePassword(String password, String hashedPassword) {
-        //TODO: implement hash password
-        return password.equals(hashedPassword);
     }
 
     public boolean signup(String email, String password) throws AbortException {
@@ -93,9 +92,25 @@ public class CustomerRepository {
         }
     }
 
-    private String hashPassword(String password) {
-        //TODO: implement hash password
-        return password;
+    private String hashPassword(String password) throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        byte[] encryptedBytes = cipher.doFinal(password.getBytes());
+        return Base64.getEncoder().encodeToString(encryptedBytes);
+    }
+    private boolean validatePassword(String password, String hashedPassword) throws NoSuchPaddingException,
+            NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(hashedPassword));
+        return (new String(decryptedBytes)).equals(password);
+    }
+
+    private SecretKey generateAESKey() throws NoSuchAlgorithmException {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+        keyGenerator.init(this.keySize);
+        return keyGenerator.generateKey();
     }
 
     public List<Customer> getAllCustomers() throws AbortException {
