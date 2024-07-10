@@ -55,8 +55,8 @@ public class ItemRepository {
         System.out.println("price: " + price);
         try {
             transaction = this.manager.start();
-            transaction.put(
-                    Put.newBuilder()
+            transaction.insert(
+                    Insert.newBuilder()
                     .namespace("item")
                     .table("item-info")
                     .partitionKey(Key.ofText("id", UUID.randomUUID().toString()))

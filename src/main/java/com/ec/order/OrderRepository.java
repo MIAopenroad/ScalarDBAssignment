@@ -52,7 +52,9 @@ public class OrderRepository {
                         Scan.newBuilder()
                                 .namespace("order")
                                 .table("statements")
-                                .partitionKey(Key.ofText("order_id", order.getOrderId()))
+                                .all()
+                                .where(ConditionBuilder.column("order_id").isEqualToText(order.getOrderId()))
+                                .projections("statement_id", "order_id", "customer_id", "item_name", "count")
                                 .build()
                 );
                 Map<String, Integer> statements = new HashMap<>();
@@ -72,6 +74,7 @@ public class OrderRepository {
             transaction.commit();
             return orderWithStatementsList;
         } catch(Exception e) {
+            e.printStackTrace();
             if(transaction != null) {
                 transaction.abort();
             }
@@ -89,10 +92,6 @@ public class OrderRepository {
         return null;
     }
 
-    //注文をデータベースに登録する
-    //入力: 誰が何を何個注文したかがListでくる
-    //処理1. 誰が何時何分に注文したかのregisterしてorderIdを生成
-    //処理2. 処理1が成功したら、そのorderIdで一つの商品とそれを何個買ったかをstatus=trueで登録する、失敗したらstatusがfalse
     public boolean registerOrder(String email, Map<String, Integer> statements) throws AbortException {
         //1. emailからcustomerIdを取得
         DistributedTransaction transaction = null;
@@ -111,23 +110,19 @@ public class OrderRepository {
             }
             String customerId = res.get().getText("id");
             String orderId = UUID.randomUUID().toString();
-            //2. orderId, customerId, timestamp, statusからordersに登録
-            System.out.println("customer_id: " + customerId);
-            System.out.println("order_id: " + orderId);
-            transaction.put(
-                    Put.newBuilder()
+            transaction.insert(
+                    Insert.newBuilder()
                             .namespace("order")
                             .table("orders")
-                            .partitionKey(Key.ofText("order_id", customerId))
+                            .partitionKey(Key.ofText("order_id", orderId))
                             .textValue("customer_id", customerId)
                             .textValue("timestamp", new Date().toString())
                             .booleanValue("status", true)
                             .build()
             );
-            //3. orderId, statementId, statement.itemName, statement.countからstatementsに登録
             for(String itemName: statements.keySet()) {
-                transaction.put(
-                        Put.newBuilder()
+                transaction.insert(
+                        Insert.newBuilder()
                                 .namespace("order")
                                 .table("statements")
                                 .partitionKey(Key.ofText("statement_id", UUID.randomUUID().toString()))

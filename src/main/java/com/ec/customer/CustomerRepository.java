@@ -74,8 +74,8 @@ public class CustomerRepository {
             }
             //登録してないなら会員登録する
             String hashedPassword = hashPassword(password);
-            transaction.put(
-                    Put.newBuilder()
+            transaction.insert(
+                    Insert.newBuilder()
                     .namespace("customer")
                     .table("customers")
                     .partitionKey(Key.ofText("email", email))
