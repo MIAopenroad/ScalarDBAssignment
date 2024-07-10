@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import React from "react";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Button,
@@ -10,10 +10,10 @@ import {
   VStack,
   Stack,
   IconButton,
-} from '@chakra-ui/react';
-import { FaTrash } from 'react-icons/fa';
-import { useCart } from '../contexts/CartContext';
-import { currencyMarks } from '../consts';
+} from "@chakra-ui/react";
+import { FaTrash } from "react-icons/fa";
+import { useCart } from "../contexts/CartContext";
+import { currencyMarks } from "../consts";
 
 const Cart: React.FC = () => {
   const { cart, removeFromCart, clearCart } = useCart();
@@ -24,14 +24,19 @@ const Cart: React.FC = () => {
     const isSuccess = true; // 本来はAPI呼び出しの結果に依存
 
     clearCart();
-    navigate(isSuccess ? '/order-success' : '/order-failure');
+    navigate(isSuccess ? "/order-success" : "/order-failure");
   };
 
-  const totalPrice = cart.reduce((total, product) => total + product.price * product.quantity, 0);
+  const totalPrice = cart.reduce(
+    (total, product) => total + product.price * product.quantity,
+    0
+  );
 
   return (
     <Box p={5}>
-      <Text fontSize="2xl" mb={5} textAlign="center">Shopping Cart</Text>
+      <Text fontSize="2xl" mb={5} textAlign="center">
+        Shopping Cart
+      </Text>
       {cart.length === 0 ? (
         <Text textAlign="center">Your cart is empty</Text>
       ) : (
@@ -45,7 +50,7 @@ const Cart: React.FC = () => {
               borderRadius="md"
               overflow="hidden"
               cursor="pointer"
-              onClick={() => navigate(`/products/${product.id}`)}
+              onClick={() => navigate(`/products/${product.itemId}`)}
             >
               <Flex alignItems="center">
                 <Image
@@ -56,9 +61,14 @@ const Cart: React.FC = () => {
                   mr={5}
                 />
                 <Stack>
-                  <Text fontSize="lg" fontWeight="bold">{product.name}</Text>
+                  <Text fontSize="lg" fontWeight="bold">
+                    {product.name}
+                  </Text>
                   <Text>Quantity: {product.quantity}</Text>
-                  <Text>{currencyMarks}{product.price}</Text>
+                  <Text>
+                    {currencyMarks}
+                    {product.price}
+                  </Text>
                 </Stack>
                 <IconButton
                   aria-label="Remove item"
@@ -66,7 +76,7 @@ const Cart: React.FC = () => {
                   size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeFromCart(product.id);
+                    removeFromCart(product.itemId);
                   }}
                 />
               </Flex>
@@ -74,7 +84,10 @@ const Cart: React.FC = () => {
           ))}
           <Divider />
           <Box p={5} textAlign="right">
-            <Text fontSize="lg" fontWeight="bold">Total: {currencyMarks}{totalPrice}</Text>
+            <Text fontSize="lg" fontWeight="bold">
+              Total: {currencyMarks}
+              {totalPrice}
+            </Text>
             <Button colorScheme="teal" mt={3} onClick={handleOrder}>
               Order
             </Button>

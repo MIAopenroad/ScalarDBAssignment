@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
   Button,
@@ -13,42 +13,66 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   HStack,
-} from '@chakra-ui/react';
-import { useCart } from '../contexts/CartContext';
-import { CartItem } from '../contexts/CartContext';
-import { sample_products, currencyMarks } from '../consts';
-
-
+} from "@chakra-ui/react";
+import { useCart } from "../contexts/CartContext";
+import { CartItem } from "../contexts/CartContext";
+import { currencyMarks } from "../consts";
+import { Item } from "../types";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const product = sample_products.find(p => p.id === parseInt(id ?? ''));  // TODO APIでDBからFind
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const location = useLocation();
+  const item: Item = location.state.item;
   const navigate = useNavigate();
 
-  if (!product) {
+  if (!item) {
     return <Box p={5}>Product not found</Box>;
   }
 
   const handleAddToCart = () => {
-    const addItem: CartItem = {...product, quantity: quantity};
+    const addItem: CartItem = { ...item, quantity: quantity };
     addToCart(addItem);
-    navigate('/cart');
+    navigate("/cart");
   };
 
   return (
     <Box p={5} display="flex" justifyContent="center">
-      <Flex direction={{ base: 'column', md: 'row' }} align="center" justify="center" maxW="800px">
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        align="center"
+        justify="center"
+        maxW="800px"
+      >
         <Box maxW="300px" mx="auto">
-          <Image src={product.imageUrl} alt={product.name} boxSize="100%" objectFit="cover" />
+          <Image
+            src={item.imageUrl}
+            alt={item.name}
+            boxSize="100%"
+            objectFit="cover"
+          />
         </Box>
-        <VStack spacing={4} align="flex-start" p={{ base: 3, md: 5 }} maxW="400px">
-          <Text fontSize="2xl" fontWeight="bold">{product.name}</Text>
-          <Text fontSize="lg">{currencyMarks}{product.price}</Text>
-          <Text>{product.description}</Text>
+        <VStack
+          spacing={4}
+          align="flex-start"
+          p={{ base: 3, md: 5 }}
+          maxW="400px"
+        >
+          <Text fontSize="2xl" fontWeight="bold">
+            {item.name}
+          </Text>
+          <Text fontSize="lg">
+            {currencyMarks}
+            {item.price}
+          </Text>
+          <Text>{item.description}</Text>
           <HStack>
-            <NumberInput value={quantity} onChange={valueString => setQuantity(parseInt(valueString))} min={1}>
+            <NumberInput
+              value={quantity}
+              onChange={(valueString) => setQuantity(parseInt(valueString))}
+              min={1}
+            >
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
