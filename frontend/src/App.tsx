@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import SignUp from './components/Signup';
 import Login from './components/Login';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
@@ -26,6 +27,7 @@ const App: React.FC = () => {
       <CartProvider>
         <Router>
           <Routes>
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Login />} />
             <Route
               path="/products"

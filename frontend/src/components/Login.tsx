@@ -1,6 +1,6 @@
 import { useState, FormEvent, FC } from 'react';
-import axios, { HttpStatusCode } from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PasswordField } from './PasswordField';
 import {
@@ -14,6 +14,8 @@ import {
   Input,
   Stack,
   VStack,
+  Link,
+  Text,
 } from '@chakra-ui/react'
 import { useCart } from '../contexts/CartContext';
 
@@ -54,12 +56,8 @@ export const Login: FC = () => {
         }
       })
       .catch((error) => {
-        if (error.response?.status === HttpStatusCode.Unauthorized) {
-          console.error(error);
-        } else {
-          console.error(error);
-          setError('通信に失敗しました。');
-        }
+        console.error(error);
+        setError('通信に失敗しました。');
       });
   };
 
@@ -99,6 +97,9 @@ export const Login: FC = () => {
               >
                 Sign in
               </Button>
+              <Text mt={4} textAlign="center">
+                Don't have an account? <Link as={RouterLink} to="/signup" color="teal.500">Sign Up</Link>
+              </Text>
             </Stack>
           </Box>
         </Stack>
