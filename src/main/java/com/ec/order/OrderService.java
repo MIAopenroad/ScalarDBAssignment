@@ -21,4 +21,7 @@ public class OrderService {
     public boolean registerOrder(String email, Map<String, Integer> statements) throws AbortException {
         return this.repository.registerOrder(email, statements);
     }
+    public List<OrderWithStatements> getOrdersByEmail(String email) throws AbortException {
+        return this.repository.getOrdersByEmail(email);
+    }
 }

@@ -30,6 +30,11 @@ public class OrderController {
             Integer count = statements.get(itemName);
             System.out.println("itemName: " + itemName + " count: " + count);
         }
-        return service.registerOrder(email, statements);
+        return this.service.registerOrder(email, statements);
+    }
+    @GetMapping("/record/{email}")
+    public List<OrderWithStatements> getOrdersByEmail(@PathVariable String email) throws AbortException {
+        System.out.println("email: " + email);
+        return this.service.getOrdersByEmail(email);
     }
 }

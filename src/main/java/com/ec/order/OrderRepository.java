@@ -17,8 +17,6 @@ public class OrderRepository {
         TransactionFactory factory = TransactionFactory.create("database.properties");
         this.manager = factory.getTransactionManager();
     }
-    // データベースにある全ての注文の履歴を取得する, 確認用のAPI, Java側で頑張ればやりたいことはできるけど本当にそれでいいの？
-    // TwoPhaseのやつ使ってJOINすればいいか
     public List<OrderWithStatements> fetchAllOrders() throws AbortException {
         DistributedTransaction transaction = null;
         try {
@@ -85,11 +83,66 @@ public class OrderRepository {
     //ユーザごとの注文履歴
     //入力: customerId
     //処理: customerIdでList<OrderId>を取得する
-    //orderIdを回して何を何個買ったかと成功したか、失敗したかを取得する。
-    //これもJava側で頑張ればいけるけど、本当にそれでいい？
-    //upsertしかないのが問題だよなぁ...
-    public List<Order> getOrdersByCustomerID(String customerId) {
-        return null;
+    public List<OrderWithStatements> getOrdersByEmail(String email) throws AbortException {
+        //1. emailからcustomerIdを取得
+        DistributedTransaction transaction = null;
+        try {
+            transaction = this.manager.start();
+            Optional<Result> res = transaction.get(
+                    Get.newBuilder()
+                            .namespace("customer")
+                            .table("customers")
+                            .partitionKey(Key.ofText("email", email))
+                            .projections("id", "email", "password")
+                            .build()
+            );
+            if(!res.isPresent()) {
+                transaction.abort();
+                return new ArrayList<>();
+            }
+            String customerId = res.get().getText("id");
+            //2. where customer_id == customerId
+            List<Result> ordersByCustomer = transaction.scan(
+                    Scan.newBuilder()
+                            .namespace("order")
+                            .table("orders")
+                            .all()
+                            .where(ConditionBuilder.column("customer_id").isEqualToText(customerId))
+                            .projections("order_id", "timestamp", "status")
+                            .build()
+            );
+            List<OrderWithStatements> resp = new ArrayList<>();
+            for(Result orderByCustomer : ordersByCustomer) {
+                String orderId = orderByCustomer.getText("order_id");
+                String timestamp = orderByCustomer.getText("timestamp");
+                boolean status = orderByCustomer.getBoolean("status");
+
+                List<Result> statementsByOrderId = transaction.scan(
+                        Scan.newBuilder()
+                                .namespace("order")
+                                .table("statements")
+                                .all()
+                                .where(ConditionBuilder.column("order_id").isEqualToText(orderId))
+                                .projections("statement_id", "order_id", "customer_id", "item_name", "count")
+                                .build()
+                );
+                Map<String, Integer> statements = new HashMap<>();
+                for(Result statement: statementsByOrderId) {
+                    String itemName = statement.getText("item_name");
+                    int count = statement.getInt("count");
+                    statements.put(itemName, count);
+                }
+                resp.add(new OrderWithStatements(orderId, customerId, timestamp, status, statements));
+            }
+            transaction.commit();
+            return resp;
+        } catch(Exception e) {
+            e.printStackTrace();
+            if(transaction != null) {
+                transaction.abort();
+            }
+            return new ArrayList<>();
+        }
     }
 
     public boolean registerOrder(String email, Map<String, Integer> statements) throws AbortException {
@@ -106,6 +159,7 @@ public class OrderRepository {
                             .build()
             );
             if(!res.isPresent()) {
+                transaction.abort();
                 return false;
             }
             String customerId = res.get().getText("id");
