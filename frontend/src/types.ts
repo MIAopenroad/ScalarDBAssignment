@@ -1,7 +1,7 @@
 export interface Costomer {
-	CustomerId: string
-	Password: string
-    Email: String
+	customerId: string
+	password: string
+    email: String
 }
 
 export interface Item {
@@ -14,19 +14,31 @@ export interface Item {
 }
 
 export interface Order {
-	OrderId: string
-	CustomerId: string
-    Timestamp: string
-    Status: boolean
+	orderId: string
+	customerId: string
+    timestamp: string
+    status: boolean
 }
 
 export interface Statement {
-	StatementId: string
-    OrderId: string
-	ItemId: string
-    Count: number
+	statementId: string
+    orderId: string
+	itemId: string
+    count: number
 }
 
 export interface OrderWithStatements extends Order{
-    Statements: Statement[]
+    statements: Statement[]
+}
+
+export interface ExtendedStatement {
+	statementId: string
+    orderId: string
+	itemId: string
+    count: number
+    item: Item
+}
+
+export interface OrderWithExtendedStatements extends Order{
+    extendedStatements: ExtendedStatement[]
 }

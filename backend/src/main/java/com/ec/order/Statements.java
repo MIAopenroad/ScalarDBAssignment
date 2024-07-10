@@ -1,8 +1,5 @@
 package com.ec.order;
 
-import java.util.Date;
-import java.util.Map;
-
 public class Statements {
     private String statementId;
     private String orderId;

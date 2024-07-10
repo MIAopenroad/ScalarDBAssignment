@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
@@ -11,21 +11,23 @@ import {
   Divider,
   Badge,
 } from "@chakra-ui/react";
-import { sample_orderHistory, currencyMarks } from "../consts";
+import { currencyMarks } from "../consts";
 import axios from "axios";
-import { OrderWithStatements } from "../types";
+import { OrderWithExtendedStatements } from "../types";
 import { useAuth } from "../contexts/AuthContext";
 
 const OrderHistory: React.FC = () => {
   const { userName } = useAuth();
-  const orderHistory = sample_orderHistory;
+  const [orderHistory, setOrderHistory] = useState<OrderWithExtendedStatements[]>([]);
+  // const orderHistory = sample_orderHistory;
 
   useEffect(() => {
     const fetchOrderHistoryByEmail = async () => {
-      const { data } = await axios.get<OrderWithStatements>(
+      const { data } = await axios.get<OrderWithExtendedStatements[]>(
         `/orders/record/${userName}`
       );
       console.log("orderHistoryByEmail>>", data);
+      setOrderHistory(data);
     };
     fetchOrderHistoryByEmail();
   }, []);
@@ -53,35 +55,35 @@ const OrderHistory: React.FC = () => {
                   Order #{order.orderId}
                 </Text>
                 <Badge
-                  colorScheme={order.status === "success" ? "green" : "red"}
+                  colorScheme={order.status ? "green" : "red"}
                 >
-                  {order.status === "success" ? "Success" : "Failure"}
+                  {order.status ? "Success" : "Failure"}
                 </Badge>
               </HStack>
-              <Text mb={3}>Date: {order.date}</Text>
-              {order.products.map((product, index) => (
+              <Text mb={3}>Date: {order.timestamp}</Text>
+              {order.extendedStatements.map((extStatement, index) => (
                 <HStack key={index} spacing={5} mb={3}>
                   <Image
-                    src={product.imageUrl}
-                    alt={product.name}
+                    src={extStatement.item.imageUrl}
+                    alt={extStatement.item.name}
                     boxSize="50px"
                     objectFit="cover"
                   />
                   <Stack>
-                    <Text fontSize="md">{product.name}</Text>
-                    <Text fontSize="sm">Quantity: {product.quantity}</Text>
+                    <Text fontSize="md">{extStatement.item.name}</Text>
+                    <Text fontSize="sm">Quantity: {extStatement.count}</Text>
                     <Text fontSize="sm">
                       {currencyMarks}
-                      {product.price}
+                      {extStatement.item.price}
                     </Text>
                   </Stack>
                 </HStack>
               ))}
               <Divider my={3} />
-              <Text fontSize="md" fontWeight="bold" textAlign="right">
+              {/* <Text fontSize="md" fontWeight="bold" textAlign="right">
                 Total: {currencyMarks}
                 {order.total}
-              </Text>
+              </Text> */}
             </Box>
           ))}
         </VStack>

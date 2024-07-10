@@ -1,6 +1,7 @@
 package com.ec.order;
 
 
+import com.ec.item.Item;
 import com.scalar.db.api.*;
 import com.scalar.db.exception.transaction.AbortException;
 import com.scalar.db.io.Key;
@@ -86,7 +87,7 @@ public class OrderRepository {
     //ユーザごとの注文履歴
     //入力: customerId
     //処理: customerIdでList<OrderId>を取得する
-    public List<OrderWithStatements> getOrdersByEmail(String email) throws AbortException {
+    public List<OrderWithExtendedStatements> getOrdersByEmail(String email) throws AbortException {
         //1. emailからcustomerIdを取得
         DistributedTransaction transaction = null;
         try {
@@ -114,7 +115,7 @@ public class OrderRepository {
                             .projections("order_id", "timestamp", "status")
                             .build()
             );
-            List<OrderWithStatements> resp = new ArrayList<>();
+            List<OrderWithExtendedStatements> resp = new ArrayList<>();
             for(Result orderByCustomer : ordersByCustomer) {
                 String orderId = orderByCustomer.getText("order_id");
                 String timestamp = orderByCustomer.getText("timestamp");
@@ -129,15 +130,34 @@ public class OrderRepository {
                                 .projections("statement_id", "order_id", "item_id", "count")
                                 .build()
                 );
-                List<Statements> statements = new ArrayList<>();
+                List<ExtendedStatement> extStatements = new ArrayList<>();
                 for(Result row: statementsByOrderId) {
-                    Statements statement = new Statements(
-                            row.getText("statement_id"), row.getText("order_id"),
-                            row.getText("item_id"), row.getInt("count")
+                    Optional<Result> item_ = transaction.get(
+                            Get.newBuilder()
+                                    .namespace("item")
+                                    .table("item_info")
+                                    .partitionKey(Key.ofText("item_id", row.getText("item_id")))
+                                    .projections("item_id", "name", "price", "stock", "description", "image_url")
+                                    .build()
                     );
-                    statements.add(statement);
+                    if(item_.isPresent()){
+                        String itemId = item_.get().getText("item_id");
+                        String name = item_.get().getText("name");
+                        Double price = item_.get().getDouble("price");
+                        int stock = item_.get().getInt("stock");
+                        String description = item_.get().getText("description");
+                        String imageUrl = item_.get().getText("image_url");
+                        ExtendedStatement extStatement = new ExtendedStatement(
+                                row.getText("statement_id"), row.getText("order_id"),
+                                row.getText("item_id"), row.getInt("count"),
+                                new Item(itemId, name,  price, stock, description, imageUrl)
+                        );
+                        extStatements.add(extStatement);
+                    } else {
+                        return new ArrayList<>();
+                    }
                 }
-                resp.add(new OrderWithStatements(orderId, customerId, timestamp, status, statements));
+                resp.add(new OrderWithExtendedStatements(orderId, customerId, timestamp, status, extStatements));
             }
             transaction.commit();
             return resp;

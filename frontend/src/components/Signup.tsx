@@ -45,7 +45,7 @@ const SignUp: React.FC = () => {
         }
         } else {
         console.error(response.statusText);
-        setError('ログイン情報が間違っています。');
+        setError('既に登録済みのユーザーです。');
         }
     })
     .catch((error) => {

@@ -34,7 +34,7 @@ public class OrderController {
         return this.service.registerOrder(email, statements);
     }
     @GetMapping("/record/{email}")
-    public List<OrderWithStatements> getOrdersByEmail(@PathVariable String email) throws AbortException {
+    public List<OrderWithExtendedStatements> getOrdersByEmail(@PathVariable String email) throws AbortException {
         System.out.println("email: " + email);
         return this.service.getOrdersByEmail(email);
     }
