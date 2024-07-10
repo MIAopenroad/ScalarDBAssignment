@@ -1,7 +1,7 @@
 # Makefile
 
 # Gradleコマンドの定義
-GRADLE = gradle
+GRADLE = ./gradlew
 
 # デフォルトのターゲットを定義
 .PHONY: all
