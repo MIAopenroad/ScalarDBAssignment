@@ -1,22 +1,44 @@
-version: "3.5"
+# version: "3.5" # optional since v1.27.0
 services:
+  frontend-dev:
+    image: scalardb-frontend_dev:latest
+    build:
+      context: .
+      dockerfile: ./docker/frontend/dev/Dockerfile
+    environment:
+      NODE_ENV: development
+    container_name: "scalardb-frontend_dev-1"
+    working_dir: /app
+    tty: true
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend:/app
+      - node_modules:/app/node_modules
+    command: "npm run dev"
   mysql:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: mysql
-    container_name: "mysql-1"
+    container_name: "mysql"
     ports:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
   cassandra:
     image: cassandra:3.11
-    container_name: "cassandra-1"
+    container_name: "cassandra"
     ports:
       - "9042:9042"
-    volumes:
-      - cassandra-data:/var/lib/cassandra
 
 volumes:
+  node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/frontend/node_modules
+      o: bind
+    volumes:
+      - cassandra-data:/var/lib/cassandra
   cassandra-data:
   mysql-data:
