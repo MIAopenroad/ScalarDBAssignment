@@ -10,7 +10,15 @@ CASSANDRA_CONTAINER=cassandra-1
 all: build load run
 
 .PHONY: init
-init: run_container wait build load run
+init: down_with_volume run_container wait build load run
+
+.PHONY: down_with_volume
+down_with_volume:
+	docker-compose down -v
+
+.PHONY: run_container
+run_container:
+	docker-compose up -d
 
 .PHONY: build
 build:
@@ -31,9 +39,6 @@ wait_mysql:
 wait_cassandra:
 	./scripts/wait_docker.sh $(CASSANDRA_CONTAINER) "$(CASSANDRA_LOG_STRING)"
 
-.PHONY: run_container
-run_container:
-	docker-compose up -d
 # .PHONY: seed
 # seed: seed_customer seed_item
 #
@@ -42,8 +47,7 @@ run_container:
 #
 # .PHONY: seed_item:
 # seed_item:
-#
-# ランタスク
+
 .PHONY: run
 run:
 	$(GRADLE) run
