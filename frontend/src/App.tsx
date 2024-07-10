@@ -10,6 +10,10 @@ import OrderHistory from './components/OrderHistory';
 import Header from './components/Header';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
+import axios from 'axios';
+import { API_URL } from './consts';
+
+axios.defaults.baseURL = API_URL;
 
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isLoggedIn } = useAuth();

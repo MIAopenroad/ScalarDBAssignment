@@ -15,7 +15,9 @@
       "item_id": "TEXT",
       "name": "TEXT",
       "price": "DOUBLE",
-      "stock": "INT"
+      "stock": "INT",
+      "description": "TEXT",
+      "image_url": "TEXT"
     }
   },
 

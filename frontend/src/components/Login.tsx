@@ -1,5 +1,5 @@
 import { useState, FormEvent, FC } from 'react';
-// import { HttpStatusCode } from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PasswordField } from './PasswordField';
@@ -16,8 +16,6 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useCart } from '../contexts/CartContext';
-// import { axiosClient } from '../providers/AxiosClientProvider';
-// import { jwtDecode } from 'jwt-decode';
 
 export interface MyJwtPayload {
   exp: number,
@@ -30,56 +28,39 @@ export const Login: FC = () => {
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
-  // const [error, setError] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { clearCart } = useCart();
 
-  // localStorage.removeItem("authUserName");
-  // localStorage.removeItem("authJoinedDate");
-  // localStorage.removeItem("authUserExp");
-
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    if (userName === password) {
-      login(userName);
-      clearCart();
-      if (location.state) {
-        navigate(location.state, { replace: true })
-      } else {
-        navigate(`/products`, { replace: true })
-      }
-    }
-
-    // axiosClient.post("/login", {
-    //   userName: userName,
-    //   password: password,
-    // })
-    //   .then((response) => {
-    //     if (response.status === HttpStatusCode.Ok) {
-    //       const jwtToken = jwtDecode<MyJwtPayload>(response.data.token);
-    //       localStorage.setItem("authUserName", jwtToken.user);
-    //       localStorage.setItem("authJoinedDate", jwtToken.joined.toString());
-    //       localStorage.setItem("authUserExp", jwtToken.exp.toString());
-    //       if (location.state) {
-    //         navigate(location.state, { replace: true })
-    //       } else {
-    //         navigate(`/dashboard`, { replace: true })
-    //       }
-    //     } else {
-    //       console.error(response.statusText);
-    //       setError('ログイン情報が間違っています。');
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     if (error.response?.status === HttpStatusCode.Unauthorized) {
-    //       console.error(error);
-    //       setError('ログイン情報が間違っています。');
-    //     } else {
-    //       console.error(error);
-    //       setError('通信に失敗しました。');
-    //     }
-    //   });
+    axios.post("/customers/signin", {
+      email: userName,
+      password: password,
+    })
+      .then((response) => {
+        if (response.data) {
+          login(userName);
+          clearCart();
+          if (location.state) {
+            navigate(location.state, { replace: true })
+          } else {
+            navigate(`/products`, { replace: true })
+          }
+        } else {
+          console.error(response.statusText);
+          setError('ログイン情報が間違っています。');
+        }
+      })
+      .catch((error) => {
+        if (error.response?.status === HttpStatusCode.Unauthorized) {
+          console.error(error);
+        } else {
+          console.error(error);
+          setError('通信に失敗しました。');
+        }
+      });
   };
 
   return (
@@ -103,7 +84,7 @@ export const Login: FC = () => {
                   Login to your account
                 </Heading>
                 <FormControl>
-                  <FormLabel htmlFor="email">User Name</FormLabel>
+                  <FormLabel htmlFor="email">Email</FormLabel>
                   <Input id="userName" type="username" value={userName} autoComplete='username' onChange={(e) => setuserName(e.target.value)} />
                 </FormControl>
                 <FormControl>
@@ -111,7 +92,7 @@ export const Login: FC = () => {
                   <PasswordField id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </FormControl>
               </VStack>
-              {/* {error && <div style={{ color: 'red' }}>{error}</div>} */}
+              {error && <div style={{ color: 'red' }}>{error}</div>}
               <Button
                 onClick={handleSubmit}
                 _hover={{ bg: "blue.300", color: "white", boxShadow: "xl" }}

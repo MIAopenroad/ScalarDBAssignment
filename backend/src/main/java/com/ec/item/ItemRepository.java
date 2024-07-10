@@ -28,7 +28,7 @@ public class ItemRepository {
                     .table("item_info")
                             .all()
                             .where(ConditionBuilder.column("stock").isGreaterThanInt(0))
-                            .projections("item_id", "name", "price", "stock")
+                            .projections("item_id", "name", "price", "stock", "description", "image_url")
                             .build()
             );
             List<Item> items = new ArrayList<>();
@@ -37,7 +37,9 @@ public class ItemRepository {
                 String name = item.getText("name");
                 Double price = item.getDouble("price");
                 int stock = item.getInt("stock");
-                items.add(new Item(itemId, name,  price, stock));
+                String description = item.getText("description");
+                String imageUrl = item.getText("image_url");
+                items.add(new Item(itemId, name,  price, stock, description, imageUrl));
             }
             transaction.commit();
             return items;
@@ -55,10 +57,8 @@ public class ItemRepository {
         String name = item.getName();
         Double price = item.getPrice();
         int stock = item.getStock();
-        System.out.println("id: " + item.getItemId());
-        System.out.println("name: " + name);
-        System.out.println("price: " + price);
-        System.out.println("stock: " + stock);
+        String description = item.getDescription();
+        String imageUrl = item.getImageUrl();
         try {
             transaction = this.manager.start();
             if (itemId == null) {
@@ -72,6 +72,8 @@ public class ItemRepository {
                             .textValue("name", name)
                             .doubleValue("price", price)
                             .intValue("stock", stock)
+                            .textValue("description", description)
+                            .textValue("image_url", imageUrl)
                             .build()
             );
             transaction.commit();

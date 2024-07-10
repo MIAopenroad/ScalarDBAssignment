@@ -1,6 +1,6 @@
 export const APP_NAME = "Arakimura's EC Shop";
-export const API_URL = 'http://localhost:3001';
-export const currencyMarks = '¥';
+export const API_URL = 'http://localhost:8080/api';
+export const currencyMarks = '$';
 export const sample_products = [
     { id: 1, name: 'Product 1', price: 100, description: 'Description for Product 1', imageUrl: 'https://via.placeholder.com/300' },
     { id: 2, name: 'Product 2', price: 200, description: 'Description for Product 2', imageUrl: 'https://via.placeholder.com/300' },

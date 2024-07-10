@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -10,12 +10,25 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { currencyMarks } from '../consts';
-import { sample_products } from '../consts';
+import axios from 'axios';
+import { Item } from '../types' 
 
 const ProductList: React.FC = () => {
   const navigate = useNavigate();
-  const products = sample_products;
+  const [items, setItems] = React.useState<Item[]>([]);
 
+  useEffect(() => {
+    axios.get<Item[]>(`/items/all`)
+      .then((response) => {
+        setItems(response.data)
+        console.log(items)
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Failed to fetch data from database.");
+      });
+  }, []);
+  
   return (
     <Box p={5}>
       <Text fontSize="2xl" mb={5} textAlign="center">Product List</Text>
@@ -27,9 +40,9 @@ const ProductList: React.FC = () => {
         }}
         gap={6}
       >
-        {products.map(product => (
+        {items.map(item => (
           <GridItem
-            key={product.id}
+            key={item.itemId}
             bg="white"
             shadow="md"
             borderRadius="md"
@@ -37,10 +50,10 @@ const ProductList: React.FC = () => {
             textAlign="center"
           >
             <VStack spacing={3} p={3} align="center">
-              <Image src={product.imageUrl} alt={product.name} boxSize="100px" objectFit="cover" />
-              <Text fontSize="xl" fontWeight="bold">{product.name}</Text>
-              <Text fontSize="lg">{currencyMarks}{product.price}</Text>
-              <Button colorScheme="teal" onClick={() => navigate(`/products/${product.id}`)}>
+              <Image src={item.imageUrl} alt={item.name} boxSize="100px" objectFit="cover" />
+              <Text fontSize="xl" fontWeight="bold">{item.name}</Text>
+              <Text fontSize="lg">{currencyMarks}{item.price}</Text>
+              <Button colorScheme="teal" onClick={() => navigate(`/items/${item.itemId}`)}>
                 View Details
               </Button>
             </VStack>
