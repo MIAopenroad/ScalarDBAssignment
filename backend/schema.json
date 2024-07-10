@@ -5,7 +5,7 @@
       "email"
     ],
     "columns": {
-      "id": "TEXT",
+      "customer_id": "TEXT",
       "email": "TEXT",
       "password": "TEXT"
     }
@@ -13,10 +13,10 @@
   "item.item-info": {
     "transaction": true,
     "partition-key": [
-      "id"
+      "item_id"
     ],
     "columns": {
-      "id": "TEXT",
+      "item_id": "TEXT",
       "name": "TEXT",
       "price": "DOUBLE"
     }
@@ -41,9 +41,8 @@
     ],
     "columns": {
       "statement_id": "TEXT",
-      "customer_id": "TEXT",
       "order_id": "TEXT",
-      "item_name": "TEXT" ,
+      "item_id": "TEXT" ,
       "count": "INT"
     }
   }
