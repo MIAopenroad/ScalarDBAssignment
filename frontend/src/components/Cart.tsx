@@ -12,17 +12,29 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { FaTrash } from "react-icons/fa";
-import { useCart } from "../contexts/CartContext";
+import { CartItem, useCart } from "../contexts/CartContext";
 import { currencyMarks } from "../consts";
+import axios from "axios";
+import { useAuth } from "../contexts/AuthContext";
 
 const Cart: React.FC = () => {
   const { cart, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
+  const { userName } = useAuth();
 
   const handleOrder = () => {
-    // 仮の注文処理ロジック
-    const isSuccess = true; // 本来はAPI呼び出しの結果に依存
-
+    let isSuccess = true;
+    const registerOrder = async () => {
+      const statements: { [key: string]: number } = {};
+      cart.map((item: CartItem) => (statements[item.itemId] = item.quantity));
+      console.log(statements);
+      const { data } = await axios.post<boolean>("/orders/order", {
+        email: userName,
+        statements: statements,
+      });
+      isSuccess = data;
+    };
+    registerOrder();
     clearCart();
     navigate(isSuccess ? "/order-success" : "/order-failure");
   };

@@ -16,11 +16,11 @@ import java.util.*;
 public class CustomerRepository {
     private final DistributedTransactionManager manager;
     private final int keySize = 256;
-    private SecretKey secretKey;
+//    private SecretKey secretKey;
     public CustomerRepository() throws IOException, NoSuchAlgorithmException {
         TransactionFactory factory = TransactionFactory.create("database.properties");
         this.manager = factory.getTransactionManager();
-        this.secretKey = this.generateAESKey();
+//        this.secretKey = this.generateAESKey();
     }
 
     public boolean signin(final String email, final String password) throws AbortException {
@@ -92,26 +92,13 @@ public class CustomerRepository {
         }
     }
 
-    private String hashPassword(String password) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        byte[] encryptedBytes = cipher.doFinal(password.getBytes());
-        return Base64.getEncoder().encodeToString(encryptedBytes);
+    private String hashPassword(String password) {
+        return password;
     }
-    private boolean validatePassword(String password, String hashedPassword) throws NoSuchPaddingException,
-            NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(hashedPassword));
-        return (new String(decryptedBytes)).equals(password);
+    private boolean validatePassword(String password, String hashedPassword)  {
+        return password.equals(hashedPassword);
     }
 
-    private SecretKey generateAESKey() throws NoSuchAlgorithmException {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-        keyGenerator.init(this.keySize);
-        return keyGenerator.generateKey();
-    }
 
     public List<Customer> getAllCustomers() throws AbortException {
         DistributedTransaction transaction = null;
