@@ -79,7 +79,7 @@ public class CustomerRepository {
                     .namespace("customer")
                     .table("customers")
                     .partitionKey(Key.ofText("email", email))
-                            .textValue("id", UUID.randomUUID().toString())
+                            .textValue("customer_id", UUID.randomUUID().toString())
                             .textValue("password", hashedPassword).build()
             );
             transaction.commit();
@@ -107,15 +107,15 @@ public class CustomerRepository {
                             .namespace("customer")
                             .table("customers")
                             .all()
-                            .projections("id", "email", "password")
+                            .projections("customer_id", "email", "password")
                             .build()
             );
             List<Customer> customers = new ArrayList<>();
             for(Result customer : res) {
-                String id = customer.getText("id");
+                String customerId = customer.getText("customer_id");
                 String email = customer.getText("email");
                 String password = customer.getText("password");
-                customers.add(new Customer(id, email, password));
+                customers.add(new Customer(customerId, email, password));
             }
             transaction.commit();
             return customers;

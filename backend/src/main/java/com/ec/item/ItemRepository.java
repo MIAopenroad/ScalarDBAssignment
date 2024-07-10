@@ -25,17 +25,17 @@ public class ItemRepository {
             List<Result> res = transaction.scan(
                     Scan.newBuilder()
                     .namespace("item")
-                    .table("item-info")
+                    .table("item_info")
                             .all()
-                            .projections("id", "name", "price")
+                            .projections("item_id", "name", "price")
                             .build()
             );
             List<Item> items = new ArrayList<>();
             for(Result item : res) {
-                String id = item.getText("id");
+                String itemId = item.getText("item_id");
                 String name = item.getText("name");
                 Double price = item.getDouble("price");
-                items.add(new Item(id, name,  price));
+                items.add(new Item(itemId, name,  price));
             }
             transaction.commit();
             return items;
@@ -58,8 +58,8 @@ public class ItemRepository {
             transaction.insert(
                     Insert.newBuilder()
                     .namespace("item")
-                    .table("item-info")
-                    .partitionKey(Key.ofText("id", UUID.randomUUID().toString()))
+                    .table("item_info")
+                    .partitionKey(Key.ofText("item_id", UUID.randomUUID().toString()))
                             .textValue("name", name)
                             .doubleValue("price", price)
                             .build()

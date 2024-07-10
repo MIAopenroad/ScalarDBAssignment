@@ -26,9 +26,9 @@ public class OrderController {
         String email = reqBody.getEmail();
         Map<String, Integer> statements = reqBody.getStatements();
         System.out.println("email: " + email);
-        for(String itemName : statements.keySet()) {
-            Integer count = statements.get(itemName);
-            System.out.println("itemName: " + itemName + " count: " + count);
+        for(String itemId : statements.keySet()) {
+            Integer count = statements.get(itemId);
+            System.out.println("itemId: " + itemId + " count: " + count);
         }
         return this.service.registerOrder(email, statements);
     }

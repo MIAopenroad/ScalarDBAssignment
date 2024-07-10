@@ -1,13 +1,13 @@
 package com.ec.customer;
 
 public class Customer {
-    private String id;
+    private String customerId;
     private String password;
     private String email;
 
     public Customer() {}
-    public Customer(String id, String email, String password) {
-        this.id = id;
+    public Customer(String customerId, String email, String password) {
+        this.customerId = customerId;
         this.email = email;
         this.password = password;
     }
@@ -19,12 +19,13 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getId() {
-        return id;
+
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCostomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getPassword() {

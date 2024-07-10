@@ -1,10 +1,5 @@
 package com.ec.order;
 
-import com.ec.item.Item;
-
-import java.util.Date;
-import java.util.Map;
-
 public class Order {
     private String orderId;
     private String customerId;
