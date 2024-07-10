@@ -18,7 +18,7 @@ init: down_with_volume run_container wait build load seed run
 
 .PHONY: down_with_volume
 down_with_volume:
-	docker-compose down -v
+	docker-compose down -v mysql cassandra
 
 .PHONY: run_container
 run_container:
