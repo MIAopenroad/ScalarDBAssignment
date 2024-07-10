@@ -1,0 +1,41 @@
+{
+  "customer.customers": {
+    "transaction": true,
+    "partition-key": ["email"],
+    "columns": {
+      "customer_id": "TEXT",
+      "email": "TEXT",
+      "password": "TEXT"
+    }
+  },
+  "item.item_info": {
+    "transaction": true,
+    "partition-key": ["item_id"],
+    "columns": {
+      "item_id": "TEXT",
+      "name": "TEXT",
+      "price": "DOUBLE"
+    }
+  },
+
+  "order.orders": {
+    "transaction": true,
+    "partition-key": ["order_id"],
+    "columns": {
+      "order_id": "TEXT",
+      "customer_id": "TEXT",
+      "timestamp": "TEXT",
+      "status": "BOOLEAN"
+    }
+  },
+  "order.statements": {
+    "transaction": "true",
+    "partition-key": ["statement_id"],
+    "columns": {
+      "statement_id": "TEXT",
+      "order_id": "TEXT",
+      "item_id": "TEXT",
+      "count": "INT"
+    }
+  }
+}
