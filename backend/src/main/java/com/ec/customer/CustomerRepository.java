@@ -6,21 +6,16 @@ import com.scalar.db.io.Key;
 import com.scalar.db.service.TransactionFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.crypto.*;
 import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Repository
 public class CustomerRepository {
     private final DistributedTransactionManager manager;
-    private final int keySize = 256;
-//    private SecretKey secretKey;
     public CustomerRepository() throws IOException, NoSuchAlgorithmException {
         TransactionFactory factory = TransactionFactory.create("database.properties");
         this.manager = factory.getTransactionManager();
-//        this.secretKey = this.generateAESKey();
     }
 
     public boolean signin(final String email, final String password) throws AbortException {

@@ -25,17 +25,10 @@ public class OrderController {
     public boolean registerOrder(@RequestBody RegisterOrderRequestModel reqBody) throws AbortException {
         String email = reqBody.getEmail();
         Map<String, Integer> statements = reqBody.getStatements();
-        System.out.println("email: " + email);
-        System.out.println(reqBody.getStatements());
-        for(String itemId : statements.keySet()) {
-            Integer count = statements.get(itemId);
-            System.out.println("itemId: " + itemId + " count: " + count);
-        }
         return this.service.registerOrder(email, statements);
     }
     @GetMapping("/record/{email}")
     public List<OrderWithExtendedStatements> getOrdersByEmail(@PathVariable String email) throws AbortException {
-        System.out.println("email: " + email);
         return this.service.getOrdersByEmail(email);
     }
 }

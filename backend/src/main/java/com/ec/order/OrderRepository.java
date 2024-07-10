@@ -36,11 +36,6 @@ public class OrderRepository {
                 String customerId = row.getText("customer_id");
                 String timestamp = row.getText("timestamp");
                 boolean status = row.getBoolean("status");
-                System.out.println("orderId: " + orderId);
-                System.out.println("customerId: " + customerId);
-                System.out.println("timestamp: " + timestamp);
-                System.out.println("status: " + status);
-                System.out.println();
                 orders.add(new Order(orderId, customerId, timestamp, status));
             }
 
@@ -62,9 +57,6 @@ public class OrderRepository {
                     String orderId = row.getText("order_id");
                     String itemId = row.getText("item_id");
                     int count = row.getInt("count");
-                    System.out.println("itemId: " + itemId);
-                    System.out.println("count: " + count);
-                    System.out.println();
                     Statements statement = new Statements(statementId, orderId, itemId, count);
                     statements.add(statement);
                 }
