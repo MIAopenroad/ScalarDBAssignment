@@ -18,7 +18,7 @@ public class ItemService {
     public List<Item> getAllItems() throws AbortException {
         return repository.getAllItems();
     }
-    public boolean addItem(Item item) throws AbortException {
-        return repository.addItem(item);
+    public boolean upsertItem(Item item) throws AbortException {
+        return repository.upsertItem(item);
     }
 }

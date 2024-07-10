@@ -19,8 +19,8 @@ public class ItemController {
     public List<Item> getAllItems() throws AbortException {
         return service.getAllItems();
     }
-    @PostMapping  ("/add")
+    @PostMapping  ("/upsert")
     public boolean addItem(@RequestBody Item item) throws AbortException {
-        return service.addItem(item);
+        return service.upsertItem(item);
     }
 }

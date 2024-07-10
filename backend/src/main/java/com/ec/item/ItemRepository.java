@@ -27,7 +27,8 @@ public class ItemRepository {
                     .namespace("item")
                     .table("item_info")
                             .all()
-                            .projections("item_id", "name", "price")
+                            .where(ConditionBuilder.column("stock").isGreaterThanInt(0))
+                            .projections("item_id", "name", "price", "stock")
                             .build()
             );
             List<Item> items = new ArrayList<>();
@@ -35,7 +36,8 @@ public class ItemRepository {
                 String itemId = item.getText("item_id");
                 String name = item.getText("name");
                 Double price = item.getDouble("price");
-                items.add(new Item(itemId, name,  price));
+                int stock = item.getInt("stock");
+                items.add(new Item(itemId, name,  price, stock));
             }
             transaction.commit();
             return items;
@@ -47,21 +49,29 @@ public class ItemRepository {
         }
     }
 
-    public boolean addItem(Item item) throws AbortException {
+    public boolean upsertItem(Item item) throws AbortException {
         DistributedTransaction transaction = null;
+        String itemId = item.getItemId();
         String name = item.getName();
         Double price = item.getPrice();
+        int stock = item.getStock();
+        System.out.println("id: " + item.getItemId());
         System.out.println("name: " + name);
         System.out.println("price: " + price);
+        System.out.println("stock: " + stock);
         try {
             transaction = this.manager.start();
-            transaction.insert(
-                    Insert.newBuilder()
-                    .namespace("item")
-                    .table("item_info")
-                    .partitionKey(Key.ofText("item_id", UUID.randomUUID().toString()))
+            if (itemId == null) {
+                itemId = UUID.randomUUID().toString();
+            }
+            transaction.upsert(
+                    Upsert.newBuilder()
+                            .namespace("item")
+                            .table("item_info")
+                            .partitionKey(Key.ofText("item_id", itemId))
                             .textValue("name", name)
                             .doubleValue("price", price)
+                            .intValue("stock", stock)
                             .build()
             );
             transaction.commit();

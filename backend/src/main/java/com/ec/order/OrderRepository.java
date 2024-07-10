@@ -151,10 +151,10 @@ public class OrderRepository {
     }
 
     public boolean registerOrder(String email, Map<String, Integer> statements) throws AbortException {
-        //1. emailからcustomerIdを取得
         DistributedTransaction transaction = null;
         try {
             transaction = this.manager.start();
+            // 1. emailからcustomerIdを取得
             Optional<Result> res = transaction.get(
                     Get.newBuilder()
                             .namespace("customer")
@@ -168,6 +168,39 @@ public class OrderRepository {
                 return false;
             }
             String customerId = res.get().getText("customer_id");
+            // 2. 注文商品の在庫数を確認
+            boolean status = true;
+            List<Result> items = new ArrayList<>();
+            for(String itemId: statements.keySet()) {
+                Optional<Result> item = transaction.get(
+                        Get.newBuilder()
+                                .namespace("item")
+                                .table("item_info")
+                                .partitionKey(Key.ofText("item_id", itemId))
+                                .where(ConditionBuilder.column("stock").isGreaterThanOrEqualToInt(statements.get(itemId)))
+                                .projections("item_id", "stock")
+                                .build()
+                );
+                if(item.isPresent()) {
+                    items.add(item.get());
+                } else {
+                    status = false;
+                }
+            }
+            if(status) {
+                for(Result item: items) {
+                    String itemId = item.getText("item_id");
+                    transaction.update(
+                            Update.newBuilder()
+                                    .namespace("item")
+                                    .table("item_info")
+                                    .partitionKey(Key.ofText("item_id", itemId))
+                                    .intValue("stock", item.getInt("stock") - statements.get(itemId))
+                                    .build()
+                    );
+                }
+            }
+            // 3. 注文情報を登録
             String orderId = UUID.randomUUID().toString();
             transaction.insert(
                     Insert.newBuilder()
@@ -176,7 +209,7 @@ public class OrderRepository {
                             .partitionKey(Key.ofText("order_id", orderId))
                             .textValue("customer_id", customerId)
                             .textValue("timestamp", new Date().toString())
-                            .booleanValue("status", true)
+                            .booleanValue("status", status)
                             .build()
             );
             for(String itemId: statements.keySet()) {

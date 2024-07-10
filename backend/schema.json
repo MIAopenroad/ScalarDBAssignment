@@ -18,7 +18,8 @@
     "columns": {
       "item_id": "TEXT",
       "name": "TEXT",
-      "price": "DOUBLE"
+      "price": "DOUBLE",
+      "stock": "INT"
     }
   },
 
