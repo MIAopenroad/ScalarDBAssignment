@@ -7,8 +7,16 @@ services:
     container_name: "mysql-1"
     ports:
       - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
   cassandra:
     image: cassandra:3.11
     container_name: "cassandra-1"
     ports:
       - "9042:9042"
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+
+volumes:
+  cassandra-data:
+  mysql-data:
