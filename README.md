@@ -60,6 +60,7 @@ If you are in the first time, you should run **make init**, otherwise, **make** 
 # otherwise
 % make
 ```
+Then, you can see this app on http://localhost:5173/ !
 
 When you want to finish this app, you should stop the backend process that is triggerd by make, and exec docker-compose down.
 ```
