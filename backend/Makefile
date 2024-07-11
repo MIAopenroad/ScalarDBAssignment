@@ -46,11 +46,6 @@ wait_cassandra:
 .PHONY: seed
 seed: seed_item
 
-.PHONY: seed_customer
-seed_customer:
-	@docker exec -i $(MYSQL_CONTAINER) mysql -u $(MYSQL_USER) -p$(MYSQL_PASSWORD) < $(SEED_CUSTOMER_SQL)
-	@echo "Success to seed customers!"
-
 .PHONY: seed_item
 seed_item:
 	@docker exec -i $(MYSQL_CONTAINER) mysql -u $(MYSQL_USER) -p$(MYSQL_PASSWORD) < $(SEED_ITEM_SQL)

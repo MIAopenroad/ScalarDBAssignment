@@ -61,7 +61,7 @@ const SignUp: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align="stretch">
             <FormControl id="userName" isRequired>
-              <FormLabel>UserName</FormLabel>
+              <FormLabel>Email</FormLabel>
               <Input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} />
             </FormControl>
             <FormControl id="password" isRequired>

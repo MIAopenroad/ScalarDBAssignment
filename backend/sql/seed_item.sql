@@ -1,3 +1,10 @@
-INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item1","Product 1", 1.2, 3, "Description for Product 1", "https://via.placeholder.com/300");
-INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item2","Product 2", 2.4, 5, "Description for Product 2", "https://via.placeholder.com/300");
-INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item3","Product 3", 3.6, 1, "Description for Product 3", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item1", "Product 1", 1.2, 3, "Description for Product 1", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item2", "Product 2", 2.4, 5, "Description for Product 2", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item3", "Product 3", 3.6, 1, "Description for Product 3", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item4", "Product 4", 4.8, 2, "Description for Product 4", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item5", "Product 5", 5.0, 4, "Description for Product 5", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item6", "Product 6", 6.2, 6, "Description for Product 6", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item7", "Product 7", 7.4, 7, "Description for Product 7", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item8", "Product 8", 8.6, 8, "Description for Product 8", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item9", "Product 9", 9.8, 9, "Description for Product 9", "https://via.placeholder.com/300");
+INSERT INTO item.item_info (item_id, name, price, stock, description, image_url) VALUES ("seed_item10", "Product 10", 10.0, 10, "Description for Product 10", "https://via.placeholder.com/300");
