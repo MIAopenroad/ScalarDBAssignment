@@ -65,12 +65,16 @@ const ProductDetail: React.FC = () => {
             {currencyMarks}
             {item.price}
           </Text>
+          <Text fontSize="lg">
+            stock: {item.stock}
+          </Text>
           <Text>{item.description}</Text>
           <HStack>
             <NumberInput
               value={quantity}
               onChange={(valueString) => setQuantity(parseInt(valueString))}
               min={1}
+              max={item.stock}
             >
               <NumberInputField />
               <NumberInputStepper>
