@@ -1,5 +1,3 @@
-# Makefile
-
 GRADLE = ./gradlew
 MYSQL_LOG_STRING=Ready for start up
 MYSQL_CONTAINER=mysql
@@ -18,11 +16,11 @@ init: down_with_volume run_container wait build load seed run
 
 .PHONY: down_with_volume
 down_with_volume:
-	docker-compose down -v mysql cassandra
+	docker-compose down -v $(MYSQL_CONTAINER) $(CASSANDRA_CONTAINER)
 
 .PHONY: run_container
 run_container:
-	docker-compose up -d mysql cassandra
+	docker-compose up -d $(MYSQL_CONTAINER) $(CASSANDRA_CONTAINER)
 
 .PHONY: build
 build:

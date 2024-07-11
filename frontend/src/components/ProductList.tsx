@@ -64,6 +64,9 @@ const ProductList: React.FC = () => {
                 {currencyMarks}
                 {item.price}
               </Text>
+              <Text fontSize="lg">
+                stock: {item.stock}
+              </Text>
               <Button
                 colorScheme="teal"
                 onClick={() =>

@@ -37,10 +37,9 @@ const Cart: React.FC = () => {
     registerOrder();
   };
 
-  const totalPrice = cart.reduce(
-    (total, product) => total + product.price * product.quantity,
-    0
-  );
+  const totalPrice = Math.round(cart.reduce(
+    (total, product) => total + product.price * product.quantity, 0
+  ) * 100) / 100;  // IEEE 754標準に基づく浮動小数点数の対策
 
   return (
     <Box p={5}>
@@ -51,7 +50,7 @@ const Cart: React.FC = () => {
         <Text textAlign="center">Your cart is empty</Text>
       ) : (
         <VStack spacing={5} align="stretch">
-          {cart.map((product, index) => (
+          {cart.map((item, index) => (
             <Box
               key={index}
               p={5}
@@ -60,33 +59,34 @@ const Cart: React.FC = () => {
               borderRadius="md"
               overflow="hidden"
               cursor="pointer"
-              onClick={() => navigate(`/products/${product.itemId}`)}
+              onClick={() => navigate(`/products/${item.itemId}`, { state: { item }})}
             >
               <Flex alignItems="center">
                 <Image
-                  src={product.imageUrl}
-                  alt={product.name}
+                  src={item.imageUrl}
+                  alt={item.name}
                   boxSize="100px"
                   objectFit="cover"
                   mr={5}
                 />
                 <Stack>
                   <Text fontSize="lg" fontWeight="bold">
-                    {product.name}
+                    {item.name}
                   </Text>
-                  <Text>Quantity: {product.quantity}</Text>
+                  <Text>Quantity: {item.quantity}</Text>
                   <Text>
                     {currencyMarks}
-                    {product.price}
+                    {item.price}
                   </Text>
                 </Stack>
                 <IconButton
                   aria-label="Remove item"
                   icon={<FaTrash />}
                   size="sm"
+                  ml={2}
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeFromCart(product.itemId);
+                    removeFromCart(item.itemId);
                   }}
                 />
               </Flex>
@@ -95,8 +95,7 @@ const Cart: React.FC = () => {
           <Divider />
           <Box p={5} textAlign="right">
             <Text fontSize="lg" fontWeight="bold">
-              Total: {currencyMarks}
-              {totalPrice}
+              Total: {currencyMarks} {totalPrice}
             </Text>
             <Button colorScheme="teal" mt={3} onClick={handleOrder}>
               Order

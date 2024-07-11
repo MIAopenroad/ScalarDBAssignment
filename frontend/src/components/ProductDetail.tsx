@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
   Button,
@@ -20,7 +20,6 @@ import { currencyMarks } from "../consts";
 import { Item } from "../types";
 
 const ProductDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const location = useLocation();
@@ -66,12 +65,16 @@ const ProductDetail: React.FC = () => {
             {currencyMarks}
             {item.price}
           </Text>
+          <Text fontSize="lg">
+            stock: {item.stock}
+          </Text>
           <Text>{item.description}</Text>
           <HStack>
             <NumberInput
               value={quantity}
               onChange={(valueString) => setQuantity(parseInt(valueString))}
               min={1}
+              max={item.stock}
             >
               <NumberInputField />
               <NumberInputStepper>

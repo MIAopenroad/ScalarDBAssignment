@@ -21,7 +21,6 @@ const OrderHistory: React.FC = () => {
   const [orderHistory, setOrderHistory] = useState<
     OrderWithExtendedStatements[]
   >([]);
-  // const orderHistory = sample_orderHistory;
 
   useEffect(() => {
     const fetchOrderHistoryByEmail = async () => {
@@ -79,10 +78,10 @@ const OrderHistory: React.FC = () => {
                 </HStack>
               ))}
               <Divider my={3} />
-              {/* <Text fontSize="md" fontWeight="bold" textAlign="right">
+              <Text fontSize="md" fontWeight="bold" textAlign="right">
                 Total: {currencyMarks}
-                {order.total}
-              </Text> */}
+                {Math.round(order.extendedStatements.reduce((total, extStatement) => total + extStatement.item.price * extStatement.count, 0) * 100) / 100}
+              </Text>
             </Box>
           ))}
         </VStack>
