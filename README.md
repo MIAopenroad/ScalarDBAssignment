@@ -15,16 +15,34 @@ So, prerequisists are only here!
 Feel free to get started!
 
 - Docker
+- Docker Compose
 - Make
+- Java runtime
+
+For example, one of the developer used env below...
+```
+% docker -v      
+Docker version 26.1.1, build 4cf5afa
+% docker-compose -v
+Docker Compose version v2.27.0-desktop.2
+% make -v
+GNU Make 3.81
+% java -version
+openjdk version "1.8.0_362"
+OpenJDK Runtime Environment (Zulu 8.68.0.19-CA-macos-aarch64) (build 1.8.0_362-b08)
+OpenJDK 64-Bit Server VM (Zulu 8.68.0.19-CA-macos-aarch64) (build 25.362-b08, mixed mode)
+```
 
 ## Get started
-
-You should two docker containers, frontend-related, backend-related.
+```
+% git clone git@github.com:MIAopenroad/ScalarDBAssignment.git
+% cd ScalarDBAssignment
+```
 
 At first, you should start frontend-related container. **Don't start from backend!!**
 
 ```
-% docker-compose up -d frontend-dev
+% docker-compose up -d frontend-prd
 ```
 
 Second, you should go to the backend directory, also start backend-related container.
@@ -36,10 +54,18 @@ If you are in the first time, you should run **make init**, otherwise, **make** 
 ```
 % cd backend
 # If you are in the first time, run this.
+% curl -LO https://github.com/scalar-labs/scalardb/releases/download/v3.12.3/scalardb-schema-loader-3.12.3.jar
 % make init
 
 # otherwise
 % make
+```
+
+When you want to finish this app, you should stop the backend process that is triggerd by make, and exec docker-compose down.
+```
+(press Ctrl-c on your terminal that run the backend process)
+...
+% docker-compose down [-v (if you want to delete data on databases)]
 ```
 
 ## Overview
