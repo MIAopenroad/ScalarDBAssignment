@@ -4,7 +4,14 @@ AraKimura E-Commerce Site is the EC Site Demo application with ScalarDB.
 
 ## Demo Video
 
-Comming Soon...
+Ordering
+
+https://github.com/MIAopenroad/ScalarDBAssignment/assets/128337097/79cd2520-f1fd-447d-8430-b2a0b8aa7ea1
+
+Ordering(failure)
+
+https://github.com/MIAopenroad/ScalarDBAssignment/assets/128337097/43844b75-fbd5-4568-a279-f8fdfd09e4c4
+
 
 ## Prerequisists
 
