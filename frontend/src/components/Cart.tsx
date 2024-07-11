@@ -50,7 +50,7 @@ const Cart: React.FC = () => {
         <Text textAlign="center">Your cart is empty</Text>
       ) : (
         <VStack spacing={5} align="stretch">
-          {cart.map((product, index) => (
+          {cart.map((item, index) => (
             <Box
               key={index}
               p={5}
@@ -59,33 +59,34 @@ const Cart: React.FC = () => {
               borderRadius="md"
               overflow="hidden"
               cursor="pointer"
-              onClick={() => navigate(`/products/${product.itemId}`)}
+              onClick={() => navigate(`/products/${item.itemId}`, { state: { item }})}
             >
               <Flex alignItems="center">
                 <Image
-                  src={product.imageUrl}
-                  alt={product.name}
+                  src={item.imageUrl}
+                  alt={item.name}
                   boxSize="100px"
                   objectFit="cover"
                   mr={5}
                 />
                 <Stack>
                   <Text fontSize="lg" fontWeight="bold">
-                    {product.name}
+                    {item.name}
                   </Text>
-                  <Text>Quantity: {product.quantity}</Text>
+                  <Text>Quantity: {item.quantity}</Text>
                   <Text>
                     {currencyMarks}
-                    {product.price}
+                    {item.price}
                   </Text>
                 </Stack>
                 <IconButton
                   aria-label="Remove item"
                   icon={<FaTrash />}
                   size="sm"
+                  ml={2}
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeFromCart(product.itemId);
+                    removeFromCart(item.itemId);
                   }}
                 />
               </Flex>

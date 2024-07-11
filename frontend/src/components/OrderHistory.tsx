@@ -80,10 +80,7 @@ const OrderHistory: React.FC = () => {
               <Divider my={3} />
               <Text fontSize="md" fontWeight="bold" textAlign="right">
                 Total: {currencyMarks}
-                {order.extendedStatements.reduce(
-                  (total, extStatement) => total + extStatement.item.price * extStatement.count,
-                  0,
-                )}
+                {Math.round(order.extendedStatements.reduce((total, extStatement) => total + extStatement.item.price * extStatement.count, 0) * 100) / 100}
               </Text>
             </Box>
           ))}
