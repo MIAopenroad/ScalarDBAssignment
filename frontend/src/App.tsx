@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SignUp from './components/Signup';
 import Login from './components/Login';
@@ -12,7 +12,7 @@ import Header from './components/Header';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import axios from 'axios';
-import { API_URL } from './consts';
+import { API_URL, APP_NAME } from './consts';
 
 axios.defaults.baseURL = API_URL;
 
@@ -22,6 +22,10 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
 };
 
 const App: React.FC = () => {
+  useEffect(() => {
+    document.title = APP_NAME;
+  }, []);
+
   return (
     <AuthProvider>
       <CartProvider>
