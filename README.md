@@ -75,7 +75,3 @@ When you want to finish this app, you should stop the backend process that is tr
 ...
 % docker-compose down [-v (if you want to delete data on databases)]
 ```
-
-## Overview
-
-## Database Schema
